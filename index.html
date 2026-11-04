@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Creamy.io</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#EEF1F4; --surface:#FFFFFF; --ink:#1B232B; --muted:#5A6672; --line:#CBD3DA; --hill:#B3A89D;
+  --orange:#ED8B00; --green:#00843D; --blue:#003DA5; --red:#DA291C; --silver:#7C878E; --purple:#7B3F98;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --bg:#13181D; --surface:#1B2229; --ink:#E6EAEE; --muted:#9AA6B1; --line:#303A45; --hill:#62584F;
+    --blue:#4F86E3; --silver:#9AA4AB; --purple:#A673C4;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --bg:#13181D; --surface:#1B2229; --ink:#E6EAEE; --muted:#9AA6B1; --line:#303A45; --hill:#62584F;
+  --blue:#4F86E3; --silver:#9AA4AB; --purple:#A673C4;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Archivo",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:17px;line-height:1.45;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:620px;margin:0 auto;padding:22px 18px 48px}
+h1{font-stretch:62%;font-weight:800;font-size:clamp(3rem,13vw,5.2rem);line-height:.86;margin:.1em 0 .15em;letter-spacing:-.01em}
+h2,h3{margin:0}
+.bar{display:flex;justify-content:center;padding:2px 0 14px;margin-bottom:14px;border-bottom:2px solid var(--line)}
+.wordmark{font-stretch:62%;font-weight:800;font-size:2.1rem;line-height:1;letter-spacing:.005em}
+.hero-line{font-stretch:78%;font-weight:700;font-size:clamp(1.35rem,5vw,1.7rem);line-height:1.15;margin:.2em 0 .3em;max-width:28em}
+.gate{text-align:center}
+.gate form{display:grid;gap:12px;max-width:340px;margin:12vh auto 0;text-align:left}
+.gate label{font-weight:650}
+.big{font-stretch:66%;font-weight:800;font-size:clamp(2.4rem,10vw,3.6rem);line-height:.95}
+.big small{font-size:.42em;font-weight:600;color:var(--muted);font-stretch:85%}
+.lede{color:var(--muted);font-size:1.08rem;margin:.3em 0 1em;max-width:34em}
+.prompt{font-stretch:72%;font-weight:760;font-size:clamp(2rem,8vw,3rem);line-height:1;margin:.5em 0 .6em}
+.prompt-small{font-stretch:80%;font-weight:650;font-size:1.15rem;color:var(--muted);margin:.8em 0 .2em}
+.said{font-stretch:75%;font-weight:760;font-size:clamp(1.8rem,7vw,2.5rem);line-height:1.05;margin:.1em 0 .4em;overflow-wrap:anywhere}
+.note{color:var(--muted);margin:.5em 0}
+.note b{color:var(--ink)}
+.where{font-weight:650;font-size:1.1rem;margin:.4em 0 1.1em}
+.hud{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-weight:600;font-size:.95rem;margin:0 0 .6em;min-height:1.6em}
+.secs{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.3rem;color:var(--ink)}
+.secs.low{color:var(--red)}
+.timer{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.timer i{display:block;height:100%;background:var(--orange);transform-origin:left center;border-radius:99px}
+.answer-form{display:grid;gap:12px}
+input.answer,input.name{width:100%;font:inherit;font-size:1.45rem;font-weight:600;padding:14px 16px;border-radius:14px;
+  border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+input.name{font-size:1.1rem;padding:11px 14px}
+input.answer:focus,input.name:focus{border-color:var(--orange);outline:none}
+input.answer.wrong{border-color:var(--red);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.err{color:var(--red);font-weight:650;margin:0;min-height:1.45em}
+button{font:inherit;cursor:pointer}
+.primary{background:var(--orange);color:#1B232B;border:0;border-radius:999px;padding:14px 24px;font-weight:750;font-size:1.08rem}
+.primary:hover{filter:brightness(1.05)}
+.ghost{background:transparent;color:var(--ink);border:2px solid var(--line);border-radius:999px;padding:12px 20px;font-weight:650}
+.ghost:hover{border-color:var(--muted)}
+.small{padding:7px 13px;font-size:.92rem}
+.link{background:none;border:0;padding:0;color:var(--muted);font-weight:650;text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 18px}
+.actions .primary{flex:1 1 100%}
+.map{margin:6px -8px 4px}
+.map svg{width:100%;height:auto;display:block;overflow:visible}
+.route{fill:none;stroke:var(--line);stroke-width:9;stroke-linecap:round}
+.progress{fill:none;stroke:var(--orange);stroke-width:9;stroke-linecap:round}
+.contour{fill:none;stroke:var(--hill);stroke-width:1.5}
+.contour.top{fill:var(--hill);fill-opacity:.25}
+.church{fill:var(--hill)}
+.hill-label{font-family:inherit;font-stretch:70%;font-weight:750;font-size:22px;fill:var(--muted)}
+.stop{fill:var(--surface);stroke:var(--ink);stroke-width:3}
+.stop.start{fill:var(--ink)}
+.stop-label{font-family:inherit;font-weight:650;font-size:14px;fill:var(--ink)}
+.marker text{font-family:inherit;font-weight:800;font-size:12px;fill:#fff;text-anchor:middle;dominant-baseline:central}
+.tier{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:7px 14px;font-weight:700;background:var(--c);color:var(--t,#fff)}
+.tiers{list-style:none;padding:0;margin:.6em 0 0;display:grid;gap:8px}
+.tiers li{display:flex;align-items:center;gap:10px}
+.tiers .pts{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:650}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--c);margin-right:8px;vertical-align:middle;flex:none}
+.how{border-top:2px solid var(--line);margin-top:14px;padding-top:16px}
+.how h2,.section-h{font-stretch:75%;font-weight:760;font-size:1.4rem;margin:1em 0 .2em}
+.how p{margin:.4em 0}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.98rem}
+th{text-align:left;color:var(--muted);font-weight:650;padding:6px 8px 6px 0;border-bottom:2px solid var(--line)}
+td{padding:9px 8px 9px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td:last-child,th:last-child{text-align:right;white-space:nowrap;padding-right:0}
+.dim{color:var(--muted)}
+.reveal{list-style:none;padding:0;margin:0 0 10px}
+.reveal li{padding:12px 0;border-bottom:1px solid var(--line)}
+.reveal .who{font-weight:650;color:var(--muted)}
+.reveal .said{font-size:1.7rem;margin:.05em 0 .3em}
+.reveal .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.reveal .note{margin:0}
+.players{display:grid;gap:10px;margin:14px 0 10px}
+.player-row{display:flex;gap:8px;align-items:center}
+fieldset.count{border:0;padding:0;margin:18px 0;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+fieldset.count legend{font-weight:650;margin-bottom:8px;padding:0}
+fieldset.count label{display:flex;gap:6px;align-items:center;font-weight:600}
+.handoff{text-align:center;padding:12vh 0 0}
+.handoff .primary{margin-top:22px}
+.board{padding-left:1.3em;margin:.4em 0 1.2em}
+.board li{padding:6px 0;font-size:1.15rem}
+.board li b{float:right;font-variant-numeric:tabular-nums}
+.copybox{width:100%;min-height:7em;font:inherit;border-radius:10px;padding:10px;border:2px solid var(--line);background:var(--surface);color:var(--ink)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script src="questions.js"></script>
+<script>
+function startGame(G){
+"use strict";
+G.questions = G.questions || [];
+const TITLE = G.title || "Creamy.io";
+const SECONDS = G.seconds || 25;
+const PER = G.perRound || 7;
+const STOPS = (G.stops && G.stops.length > 1) ? G.stops : ["Ruggles","Roxbury Crossing","Brigham Circle","Mission Church"];
+const TIERS = [
+  {key:"pledge",  label:"Pledge",          pts:10,  color:"var(--silver)", sq:"⬜"},
+  {key:"creamer", label:"Creamer",         pts:35,  color:"var(--green)",  sq:"🟩"},
+  {key:"aboard",  label:"A-Board",         pts:65,  color:"var(--orange)", sq:"🟧", text:"#1B232B"},
+  {key:"founder", label:"Founding Father", pts:100, color:"var(--red)",    sq:"🟥"}
+];
+const MISS = {label:"Dropped", pts:0, color:"var(--line)", text:"var(--ink)", sq:"⬛"};
+const ALLOWED = {label:"Voted in", pts:50, color:"var(--purple)", sq:"🟪"};
+const PLAYER_COLORS = ["var(--orange)","var(--blue)","var(--green)","var(--red)","var(--purple)","var(--silver)","#B8860B","#2A9D8F"];
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.title = TITLE;
+
+/* ---------- helpers ---------- */
+const app = document.getElementById("app");
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function norm(s){
+  return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()
+    .replace(/&/g," and ").replace(/['’`]/g,"").replace(/[^a-z0-9]+/g," ").trim()
+    .replace(/^(the|a|an) /,"");
+}
+const KEY = (G.saveKey || norm(TITLE).replace(/ /g,"-") || "game");
+const store = {
+  get(k){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+};
+let timerRAF = 0;
+function view(html){ cancelAnimationFrame(timerRAF); app.innerHTML = `<div class="wrap"><header class="bar"><span class="wordmark">${esc(TITLE)}</span></header>${html}</div>`; window.scrollTo(0,0); }
+const $ = id => document.getElementById(id);
+
+function lev(a,b){
+  let prev = Array.from({length:b.length+1},(_,j)=>j);
+  for(let i=1;i<=a.length;i++){
+    const cur=[i];
+    for(let j=1;j<=b.length;j++) cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+    prev=cur;
+  }
+  return prev[b.length];
+}
+function buildIndex(q){
+  const idx = new Map();
+  TIERS.forEach((t,ti)=>{
+    ((q.answers||{})[t.key]||[]).forEach(entry=>{
+      const forms = String(entry).split("/"); const canon = forms[0].trim();
+      forms.forEach(f=>{
+        const k = norm(f); if(!k) return;
+        if(!idx.has(k)) idx.set(k,{tier:ti,canon});
+        const d = k.replace(/ /g,""); if(!idx.has(d)) idx.set(d,{tier:ti,canon});
+      });
+    });
+  });
+  return idx;
+}
+function judge(q, raw){
+  const k = norm(raw); if(!k) return null;
+  if(!q._idx) q._idx = buildIndex(q);
+  const idx = q._idx;
+  // 1. exact (also ignoring spaces and plural s)
+  for(const t of [k, k.replace(/ /g,""), k.replace(/es$/,""), k.replace(/s$/,"")]) if(t && idx.has(t)) return idx.get(t);
+  const better = (v, len, best) => !best || v.tier < best.v.tier || (v.tier === best.v.tier && len > best.len);
+  // 2. one letter off (two for long answers)
+  const lim = k.length>=9 ? 2 : k.length>=3 ? 1 : 0;
+  if(lim){
+    let best=null, bd=lim+1;
+    for(const [key,v] of idx){
+      if(key.length<3 || Math.abs(key.length-k.length)>lim) continue;
+      const d = lev(k,key);
+      if(d>lim) continue;
+      if(d<bd || (d===bd && better(v,key.length,best&&{v:best}))){ bd=d; best=v; }
+    }
+    if(best) return best;
+  }
+  // 3. the answer contains a listed answer as a whole word ("plymouth rock assurance", "lucas g"),
+  //    or a word of the answer is one letter off a listed one-word answer.
+  //    If several match, the most obvious one counts, so listing names doesn't pay.
+  const padded = ` ${k} `, words = k.split(" ");
+  const hits = [];
+  for(const [key,v] of idx){
+    let ok = padded.includes(` ${key} `);
+    if(!ok && k.length>=5 && key.includes(" ") && ` ${key} `.includes(padded)) ok = true;
+    if(!ok && key.length>=4 && !key.includes(" ")) ok = words.some(w => w.length>=4 && Math.abs(w.length-key.length)<=1 && lev(w,key)<=1);
+    if(ok) hits.push({key, v, len:key.length});
+  }
+  // "social media chair" should count as Social Media, not Social
+  const kept = hits.filter(h => !hits.some(o => o.len>h.len && ` ${o.key} `.includes(` ${h.key} `)));
+  let hit = null;
+  for(const h of kept) if(better(h.v, h.len, hit)) hit = h;
+  return hit ? hit.v : null;
+}
+function rarest(q){
+  for(let i=TIERS.length-1;i>=0;i--){ const l=(q.answers||{})[TIERS[i].key]; if(l && l.length) return String(l[0]).split("/")[0]; }
+  return "";
+}
+const tierOf = r => r.allowed ? ALLOWED : (r.tier>=0 ? TIERS[r.tier] : MISS);
+const badge = (t, pts) => `<span class="tier" style="--c:${t.color};${t.text?`--t:${t.text}`:""}">${esc(t.label)} <b>+${pts==null?t.pts:pts}</b></span>`;
+
+function hash(s){ let h=2166136261; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,16777619); } return h>>>0; }
+function rng(seed){ return ()=>{ seed=seed+0x6D2B79F5|0; let t=Math.imul(seed^seed>>>15,1|seed); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function pick(seedStr, n){
+  const r = rng(hash(seedStr)); const a = G.questions.map((_,i)=>i);
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(r()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a.slice(0, Math.min(n, a.length));
+}
+function today(){ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+const fmtDate = s => new Date(s+"T12:00:00").toLocaleDateString(undefined,{month:"short",day:"numeric"});
+
+/* ---------- the map ---------- */
+const LOOP = "M 470 80 C 540 120 562 220 522 292 C 482 362 380 382 300 372 C 200 362 118 330 104 250 C 90 170 140 96 230 70 C 320 45 410 50 470 80 Z";
+const C = {x:322, y:218};
+function mapHTML(id){
+  return `<figure class="map" id="${id}"><svg viewBox="-20 0 680 440" role="img" aria-label="Route map around Mission Hill">
+    <ellipse class="contour" cx="${C.x}" cy="${C.y}" rx="150" ry="98"/>
+    <ellipse class="contour" cx="${C.x}" cy="${C.y-4}" rx="104" ry="66"/>
+    <ellipse class="contour" cx="${C.x}" cy="${C.y-8}" rx="60" ry="38"/>
+    <ellipse class="contour top" cx="${C.x}" cy="${C.y-11}" rx="24" ry="14"/>
+    <g class="church" transform="translate(${C.x} ${C.y-14})">
+      <rect x="-15" y="-2" width="30" height="16"/>
+      <polygon points="-15,-2 -10,-34 -5,-2"/><polygon points="5,-2 10,-34 15,-2"/>
+    </g>
+    <text class="hill-label" x="${C.x}" y="${C.y+36}" text-anchor="middle">Mission Hill</text>
+    <path class="route" d="${LOOP}"/>
+    <path class="progress" d="${LOOP}" style="stroke-dasharray:0 9999"/>
+    <g class="stops"></g><g class="markers"></g>
+  </svg></figure>`;
+}
+function animate(from,to,ms,cb){
+  if(reduceMotion || from===to){ cb(to); return; }
+  const t0 = performance.now();
+  const step = t => { const k=Math.min(1,(t-t0)/ms), e=1-Math.pow(1-k,3); cb(from+(to-from)*e); if(k<1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+function drawMap(id, opts){
+  const fig = $(id); if(!fig) return;
+  const svg = fig.querySelector("svg"), path = svg.querySelector(".route"), L = path.getTotalLength();
+  const at = f => path.getPointAtLength(L*Math.max(0,Math.min(1,f)) % L || 0);
+  let stopsHTML = "";
+  STOPS.forEach((name,i)=>{
+    const p = path.getPointAtLength(L*i/STOPS.length);
+    let vx=p.x-C.x, vy=p.y-C.y; const m=Math.hypot(vx,vy)||1; vx/=m; vy/=m;
+    const anchor = vx>0.35 ? "start" : vx<-0.35 ? "end" : "middle";
+    const lx = p.x+vx*18, ly = p.y+vy*18+(vy>0.4?12:vy<-0.4?-2:5);
+    stopsHTML += `<circle class="stop${i===0?" start":""}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${i===0?8:6}"/>
+      <text class="stop-label" x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="${anchor}">${esc(name)}</text>`;
+  });
+  svg.querySelector(".stops").innerHTML = stopsHTML;
+  const prog = svg.querySelector(".progress");
+  if(opts.progress){
+    animate(opts.progress.from, opts.progress.to, 1100, f=>{ prog.style.strokeDasharray = `${L*f} ${L*2}`; });
+  }
+  const mg = svg.querySelector(".markers");
+  (opts.markers||[]).forEach((mk,i)=>{
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute("class","marker");
+    g.innerHTML = `<circle r="${mk.text?13:11}" fill="${mk.color}" stroke="var(--surface)" stroke-width="3.5"/>${mk.text?`<text>${esc(mk.text)}</text>`:""}`;
+    mg.appendChild(g);
+    const off = (opts.markers.length>1) ? (i-(opts.markers.length-1)/2)*6 : 0;
+    animate(mk.from==null?mk.frac:mk.from, mk.frac, 1100, f=>{
+      const p = (f>=1) ? path.getPointAtLength(0) : path.getPointAtLength(L*Math.max(0,f));
+      g.setAttribute("transform",`translate(${(p.x+off).toFixed(1)} ${(p.y-off).toFixed(1)})`);
+    });
+  });
+}
+function whereText(f){
+  if(f>=0.999) return `A full loop, all the way back to ${STOPS[0]}.`;
+  if(f<=0) return `Still standing at ${STOPS[0]}.`;
+  const i = Math.floor(f*STOPS.length+1e-9);
+  return i===0 ? `On the way to ${STOPS[1]}.` : `Made it past ${STOPS[i]}.`;
+}
+
+/* ---------- shared question screen ---------- */
+function askQuestion(q, hud, done){
+  view(`<div class="hud"><span>${esc(hud)}</span><span class="secs" id="secs">${SECONDS}</span></div>
+    <div class="timer" aria-hidden="true"><i id="bar"></i></div>
+    <h2 class="prompt">${esc(q.q)}</h2>
+    <form id="f" class="answer-form" autocomplete="off">
+      <label class="sr" for="a">Your answer</label>
+      <input class="answer" id="a" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go" placeholder="Type your answer" maxlength="60">
+      <button class="primary" type="submit">Lock it in</button>
+      <p class="err" id="err" role="alert"></p>
+    </form>`);
+  const input=$("a"), bar=$("bar"), secs=$("secs");
+  input.focus();
+  const total = SECONDS*1000, end = performance.now()+total; let finished=false;
+  const finish = () => { if(finished) return; finished=true; cancelAnimationFrame(timerRAF); done(input.value.trim()); };
+  const err = $("err");
+  input.addEventListener("input", () => { err.textContent = ""; input.classList.remove("wrong"); });
+  $("f").addEventListener("submit", e=>{
+    e.preventDefault();
+    const val = input.value.trim();
+    if(!val){ err.textContent = "Type an answer first."; input.focus(); return; }
+    if(!judge(q, val)){
+      err.textContent = `“${val}” isn’t on the list. Try another.`;
+      input.classList.remove("wrong"); void input.offsetWidth; input.classList.add("wrong");
+      input.select(); return;
+    }
+    finish();
+  });
+  const tick = t => {
+    const left = Math.max(0,end-t); bar.style.transform = `scaleX(${left/total})`;
+    const s = Math.ceil(left/1000); secs.textContent = s; secs.classList.toggle("low", s<=5);
+    if(left<=0){ finish(); return; }
+    timerRAF = requestAnimationFrame(tick);
+  };
+  timerRAF = requestAnimationFrame(tick);
+}
+function noQuestions(){
+  view(`<h2 class="big">No questions yet</h2><p class="lede">Add at least one question to questions.js, then reload this page.</p>`);
+}
+
+/* ---------- home ---------- */
+function home(){
+  const played = store.get(`${KEY}:daily:${today()}`);
+  view(`<p class="hero-line">${esc(G.tagline||"")}</p>
+    ${mapHTML("m")}
+    <div class="actions">
+      <button class="primary" id="daily">${played ? "See today’s result" : "Play today’s round"}</button>
+      <button class="ghost" id="free">Free play</button>
+      <button class="ghost" id="party">Party mode</button>
+    </div>
+    <section class="how">
+      <h2>How it works</h2>
+      <p>You get ${PER} prompts and ${SECONDS} seconds for each. Obvious answers barely move you. The rarer your answer, the farther you get around the hill. A perfect round brings you all the way back to ${esc(STOPS[0])}.</p>
+      <p>Today’s round is the same for everyone, so you can compare in the group chat. Party mode is for one phone passed around the room.</p>
+      <ul class="tiers">${TIERS.map(t=>`<li><span class="dot" style="--c:${t.color}"></span>${t.label}<span class="pts">${t.pts} pts</span></li>`).join("")}</ul>
+    </section>`);
+  drawMap("m",{});
+  $("daily").onclick = () => startSolo("daily");
+  $("free").onclick = () => startSolo("free");
+  $("party").onclick = () => partySetup();
+}
+
+/* ---------- solo ---------- */
+function startSolo(mode){
+  if(!G.questions.length) return noQuestions();
+  const date = today();
+  if(mode==="daily"){ const saved = store.get(`${KEY}:daily:${date}`); if(saved) return soloFinal(saved); }
+  const qids = pick(mode==="daily" ? `daily:${date}` : `free:${Math.random()}`, PER);
+  soloAsk({mode, date, qids, results:[]});
+}
+function soloAsk(S){
+  const i = S.results.length, q = G.questions[S.qids[i]];
+  askQuestion(q, `Prompt ${i+1} of ${S.qids.length}`, raw=>{
+    const j = judge(q, raw);
+    S.results.push({raw, tier: j ? j.tier : -1, canon: j ? j.canon : null});
+    soloReveal(S);
+  });
+}
+const soloPoints = S => S.results.reduce((a,r)=>a+tierOf(r).pts,0);
+function soloReveal(S){
+  const i=S.results.length-1, r=S.results[i], q=G.questions[S.qids[i]], t=tierOf(r);
+  const max=S.qids.length*100, total=soloPoints(S), before=total-t.pts, last=i===S.qids.length-1;
+  const rare = rarest(q);
+  view(`<div class="hud"><span>Prompt ${i+1} of ${S.qids.length}</span><span>${total} pts</span></div>
+    <p class="prompt-small">${esc(q.q)}</p>
+    <p class="said">${r.raw ? `“${esc(r.raw)}”` : "No answer in time"}</p>
+    ${badge(t)}
+    ${r.tier<0 && r.raw ? `<p class="note">That one isn’t on the list, so it doesn’t move you.</p>` : ""}
+    ${r.tier>=0 && norm(r.canon)!==norm(r.raw) ? `<p class="note">Counted as <b>${esc(r.canon)}</b>.</p>` : ""}
+    ${rare ? `<p class="note">Rarest answer on the list: <b>${esc(rare)}</b></p>` : ""}
+    ${mapHTML("m")}
+    <p class="where">${whereText(total/max)}</p>
+    <button class="primary" id="next">${last ? "See my results" : "Next prompt"}</button>`);
+  drawMap("m",{progress:{from:before/max,to:total/max}, markers:[{from:before/max, frac:total/max, color:"var(--orange)"}]});
+  $("next").onclick = () => {
+    if(last){ if(S.mode==="daily") store.set(`${KEY}:daily:${S.date}`, S); soloFinal(S); }
+    else soloAsk(S);
+  };
+  $("next").focus();
+}
+function soloFinal(S){
+  const max=S.qids.length*100, total=soloPoints(S), f=total/max, daily=S.mode==="daily";
+  const rows = S.results.map((r,i)=>{ const t=tierOf(r); const q=G.questions[S.qids[i]];
+    return `<tr><td>${esc(q?q.q:"")}</td><td>${r.raw?esc(r.raw):"<span class='dim'>none</span>"}</td><td><span class="dot" style="--c:${t.color}"></span>${t.pts}</td></tr>`; }).join("");
+  view(`<div class="hud"><span>${daily ? `Today’s round, ${fmtDate(S.date)}` : "Free play"}</span><button class="link" id="home">Home</button></div>
+    <h2 class="big">${total} <small>of ${max} points</small></h2>
+    <p class="where">${whereText(f)}</p>
+    ${mapHTML("m")}
+    <div class="actions">
+      ${daily ? `<button class="primary" id="share">Copy result for the group chat</button>` : ""}
+      <button class="${daily?"ghost":"primary"}" id="again">${daily ? "Free play" : "Play again"}</button>
+    </div>
+    <p id="copied" class="note" role="status"></p>
+    <h3 class="section-h">Your answers</h3>
+    <div class="table-wrap"><table><thead><tr><th>Prompt</th><th>Answer</th><th>Points</th></tr></thead><tbody>${rows}</tbody></table></div>`);
+  drawMap("m",{progress:{from:0,to:f}, markers:[{from:0, frac:f, color:"var(--orange)"}]});
+  $("home").onclick = home;
+  $("again").onclick = () => startSolo("free");
+  if(daily) $("share").onclick = () => {
+    const text = `${TITLE}, ${fmtDate(S.date)}\n${S.results.map(r=>tierOf(r).sq).join("")}\n${total}/${max}. ${whereText(f)}`;
+    copy(text, $("copied"));
+  };
+}
+async function copy(text, el){
+  try{ await navigator.clipboard.writeText(text); el.textContent = "Copied. Paste it in the group chat."; }
+  catch(e){ el.innerHTML = `<textarea class="copybox" readonly>${esc(text)}</textarea>`; el.querySelector("textarea").select(); }
+}
+
+/* ---------- party ---------- */
+function partySetup(prevNames){
+  if(!G.questions.length) return noQuestions();
+  let names = prevNames ? prevNames.slice() : ["",""];
+  const maxQ = G.questions.length;
+  let counts = [...new Set([3,5,7,10].filter(c=>c<maxQ).concat(maxQ))];
+  let count = counts.includes(PER) ? PER : counts[counts.length-1];
+  const read = () => {
+    names = names.map((_,i)=>$("p"+i).value.trim());
+    const r = document.querySelector("input[name=c]:checked"); if(r) count = +r.value;
+  };
+  const draw = focusLast => {
+    view(`<div class="hud"><button class="link" id="home">Home</button></div>
+      <h2 class="big">Party mode</h2>
+      <p class="lede">One phone, passed around. Everyone answers in secret, then you reveal together. Say the same thing as someone else and you split the points.</p>
+      <div class="players">${names.map((n,i)=>`<div class="player-row">
+        <label class="sr" for="p${i}">Player ${i+1}</label>
+        <input class="name" id="p${i}" value="${esc(n)}" placeholder="Player ${i+1}" maxlength="18">
+        ${names.length>2?`<button class="ghost small" data-rm="${i}">Remove</button>`:""}</div>`).join("")}</div>
+      ${names.length<8?`<button class="ghost" id="add">Add player</button>`:""}
+      <fieldset class="count"><legend>Prompts per game</legend>
+        ${counts.map(c=>`<label><input type="radio" name="c" value="${c}" ${c===count?"checked":""}> ${c}</label>`).join("")}
+      </fieldset>
+      <button class="primary" id="go">Start the game</button>`);
+    $("home").onclick = home;
+    if($("add")) $("add").onclick = () => { read(); names.push(""); draw(true); };
+    document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{ read(); names.splice(+b.dataset.rm,1); draw(); });
+    $("go").onclick = () => { read(); startParty(names.map((n,i)=>n||`Player ${i+1}`), count); };
+    if(focusLast) $("p"+(names.length-1)).focus();
+  };
+  draw();
+}
+function startParty(players, count){
+  partyHandoff({players, count, qids:pick(`party:${Math.random()}`, count), qi:0, pi:0, answers:[]});
+}
+function partyHandoff(P, locked){
+  const name = P.players[P.pi], q = G.questions[P.qids[P.qi]];
+  view(`<div class="hud"><span>Prompt ${P.qi+1} of ${P.qids.length}</span></div>
+    <div class="handoff">
+      ${locked ? `<p class="note">Locked in. Hide the screen.</p>` : ""}
+      <p class="lede">Pass the phone to</p>
+      <h2 class="big">${esc(name)}</h2>
+      <p class="note">Everyone else, look away.</p>
+      <button class="primary" id="ready">I’m ${esc(name)}, start my timer</button>
+    </div>`);
+  $("ready").onclick = () => askQuestion(q, `${name}, prompt ${P.qi+1} of ${P.qids.length}`, raw=>{
+    const j = judge(q, raw);
+    (P.answers[P.qi] = P.answers[P.qi] || [])[P.pi] = {raw, tier:j?j.tier:-1, canon:j?j.canon:null, allowed:false};
+    P.pi++;
+    if(P.pi < P.players.length) partyHandoff(P, true);
+    else { P.pi = 0; partyReveal(P); }
+  });
+}
+function scoreQ(list, players){
+  const keyOf = r => r.tier>=0 ? "c:"+norm(r.canon) : (r.allowed ? "r:"+norm(r.raw) : null);
+  const groups = {};
+  list.forEach((r,i)=>{ const k=keyOf(r); if(k) (groups[k]=groups[k]||[]).push(i); });
+  return list.map((r,i)=>{
+    const t = tierOf(r), k = keyOf(r);
+    const shared = k ? groups[k].filter(x=>x!==i).map(x=>players[x]) : [];
+    return {t, pts: shared.length ? Math.round(t.pts/2) : t.pts, shared};
+  });
+}
+function partyTotals(P){
+  const tot = P.players.map(()=>0);
+  P.answers.forEach(list=>{ if(list && list.length===P.players.length) scoreQ(list,P.players).forEach((s,i)=>tot[i]+=s.pts); });
+  return tot;
+}
+function standings(P){
+  const tot = partyTotals(P);
+  const order = P.players.map((n,i)=>({n,i,s:tot[i]})).sort((a,b)=>b.s-a.s);
+  return `<ol class="board">${order.map(o=>`<li><span class="dot" style="--c:${PLAYER_COLORS[o.i%PLAYER_COLORS.length]}"></span>${esc(o.n)} <b>${o.s}</b></li>`).join("")}</ol>`;
+}
+function partyReveal(P){
+  const q = G.questions[P.qids[P.qi]], list = P.answers[P.qi], sc = scoreQ(list, P.players);
+  const last = P.qi === P.qids.length-1, rare = rarest(q);
+  view(`<div class="hud"><span>Prompt ${P.qi+1} of ${P.qids.length}</span><span>Reveal</span></div>
+    <h2 class="prompt">${esc(q.q)}</h2>
+    <ul class="reveal">${list.map((r,i)=>`<li>
+      <div class="who">${esc(P.players[i])}</div>
+      <div class="said">${r.raw ? `“${esc(r.raw)}”` : "No answer in time"}</div>
+      <div class="row">${badge(sc[i].t, sc[i].pts)}
+        ${sc[i].shared.length ? `<span class="note">Split with ${esc(sc[i].shared.join(", "))}</span>` : ""}
+        ${(r.tier<0 && r.raw) ? `<button class="ghost small" data-allow="${i}">${r.allowed ? "Take it back" : "Allow it"}</button>` : ""}
+      </div></li>`).join("")}</ul>
+    ${rare ? `<p class="note">Rarest answer on the list: <b>${esc(rare)}</b></p>` : ""}
+    <h3 class="section-h">Standings</h3>
+    ${standings(P)}
+    <button class="primary" id="next">${last ? "See final standings" : "Next prompt"}</button>`);
+  document.querySelectorAll("[data-allow]").forEach(b=>b.onclick=()=>{ const r=list[+b.dataset.allow]; r.allowed=!r.allowed; partyReveal(P); });
+  $("next").onclick = () => { if(last) partyFinal(P); else { P.qi++; partyHandoff(P); } };
+}
+function partyFinal(P){
+  const tot = partyTotals(P), max = P.qids.length*100;
+  const winner = Math.max(...tot), champs = P.players.filter((_,i)=>tot[i]===winner);
+  view(`<div class="hud"><span>Final standings</span><button class="link" id="home">Home</button></div>
+    <h2 class="big">${esc(champs.join(" and "))} ${champs.length>1?"tie":"wins"}</h2>
+    <p class="where">${whereText(winner/max)}</p>
+    ${mapHTML("m")}
+    ${standings(P)}
+    <div class="actions">
+      <button class="primary" id="again">Play again with the same people</button>
+      <button class="ghost" id="edit">Change players</button>
+    </div>`);
+  drawMap("m",{markers:P.players.map((n,i)=>({from:0, frac:tot[i]/max, color:PLAYER_COLORS[i%PLAYER_COLORS.length], text:(n.trim()[0]||"?").toUpperCase()}))});
+  $("home").onclick = home;
+  $("again").onclick = () => startParty(P.players, P.count);
+  $("edit").onclick = () => partySetup(P.players);
+}
+
+home();
+}
+
+/* ---------- password screen ---------- */
+const PASSWORD = "skim";
+const PW_KEY = "creamy:pw";
+function gate(msg){
+  const app = document.getElementById("app");
+  app.innerHTML = `<div class="wrap gate"><header class="bar"><span class="wordmark">Creamy.io</span></header>
+    <form id="pw" autocomplete="off">
+      <label for="pwi">Password</label>
+      <input class="answer" id="pwi" type="password" autocapitalize="off">
+      <button class="primary" type="submit">Enter</button>
+      <p class="note" role="status">${msg||""}</p>
+    </form></div>`;
+  const input = document.getElementById("pwi"); input.focus();
+  document.getElementById("pw").addEventListener("submit", e=>{
+    e.preventDefault();
+    if(input.value.trim().toLowerCase() === PASSWORD){
+      try{ localStorage.setItem(PW_KEY, "1"); }catch(_){}
+      startGame(window.GAME || {questions:[]});
+    } else gate("Wrong password. Try again.");
+  });
+}
+let ok = false; try{ ok = localStorage.getItem(PW_KEY) === "1"; }catch(_){}
+if(ok) startGame(window.GAME || {questions:[]}); else gate();
+</script>
+</body>
+</html>
